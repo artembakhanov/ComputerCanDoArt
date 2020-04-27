@@ -100,11 +100,10 @@ class LayerVoronoiImage(Image):
         return mutated
 
     def _chance(self, gen):
-        return 1
         if gen < 50000:
             return 0.5
         else:
-            return 0.5 + (gen - 50000) * 0.5 / 5000
+            return 0.5 + (gen - 50000) * 0.5 / 50000
 
     def _mutate(self, mutated, gen):
         changed_layer = rd.randint(0, 3)
