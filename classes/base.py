@@ -11,7 +11,7 @@ def mse(im1, im2):
         el2 = im2[0, i]
         mse += (el1 - el2) ** 2
 
-    return mse
+    return mse / im1.shape[1]
 
 
 class Image:

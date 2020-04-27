@@ -3,8 +3,6 @@ from scipy.spatial.qhull import Voronoi
 from .base import mse
 from .layers import *
 
-a = 0
-
 
 class LayerVoronoiImage(Image):
     def __init__(self, layers, original_image, pts_number, size):
@@ -13,7 +11,7 @@ class LayerVoronoiImage(Image):
         self.layers = layers
         self.im = None
         self.pts_number = pts_number
-        self.radius = 4 #size[0] // int(np.sqrt(pts_number)) // 2
+        self.radius = 4  # size[0] // int(np.sqrt(pts_number)) // 2
         self.size = size
         self.rgb = [None] * 3
         self.polys = [None] * 3
@@ -102,6 +100,7 @@ class LayerVoronoiImage(Image):
         return mutated
 
     def _chance(self, gen):
+        return 1
         if gen < 50000:
             return 0.5
         else:

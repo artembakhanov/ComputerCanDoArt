@@ -112,9 +112,9 @@
 \section{Introduction}
 \subsection{General information}
     The assignment is solved by me, Artem Bakhanov, a student of Innopolis University. If you have any question regarding any part of this document and other provided materials, you can contact me via email: \href{mailto:a.bahanov@innopolis.university}{a.bahanov@innopolis.university}.\\
-    In this assignment, I used Python 3.7 as a programming language. Also OpenCV and Numpy were used to work with images easily and with high performance. For generating Voronoi polygons I used Scipy.
+    In this assignment, I used Python 3.7 as a programming language. Also OpenCV and Numpy were used to work with images easily and with high performance. For generating Voronoi polygons I used Scipy. All files with code are in directory \texttt{/code}.
 \subsection{Running the code}
-First of all, you need to install Python of version 3.7. Note, that the code was not tested on Python 3.8, I cannot guarantee it works on Python 3.8. Install dependencies with \texttt{pip install -r requirements.txt} (this command may vary on different OSs and computers).
+First of all, you need to install Python of version 3.7. Note, that the code was not tested on Python 3.8, I cannot guarantee it works on Python 3.8. Install dependencies with \texttt{pip install -r requirements.txt} (this command may vary on different OSs and computers). Then you can run \texttt{main.py} and it will generate some image. If you want another image or you want to change parameters - edit \texttt{main.py} file. 
 
 \section{The Story}
 In the beginning I had a lot of ideas which were about generating triangles or more complex polygons to recreate the original image. Initially, I created a program that did it but I did not like the result I got. I started researching and probing a lot. For now I created about 6 different algorithms and I was not satisfied with any of them. The problem was that it was too edgy and "sharp". The images I got were just inaccurate replica of the original images. So I decided that randomness in the figures is not cool and I remembered my internship in 2019 when I was creating an app that reconstructs 3d mesh. One of the task that I needed to solve - Voronoi Partition. This algorithm gives really beautiful images. I took the algorithm and I took one my idea from the previous algorithm - RGB splitting. My final program creates image out of 3 independent Voronoi Diagrams - each in separate color layer. And the result is interesting. It is structured and chaotic at the same time.
@@ -170,7 +170,7 @@ My algorithm need to choose one individual out of several mutated individuals an
 
 
 \section{Image Manipulations}
-I do not make any specific image manipulations. I read the image from the memory and do not change it. For the image reading and writing I used opencv library. When I generate image (for example I use in the fitness function), I use cv2 drawing function \texttt{fillPoly}. Initially, I generate the three empty (black) 1-channel images for each layer. Then I iteratively draw the polygons and then I merge the layers using \texttt{cv2.merge} function. 
+I do not make any specific image manipulations. I read the image from the memory and do not change it. For the image reading and writing I used opencv library. When I generate image (for example I use it in the fitness function), I use cv2 drawing function \texttt{fillPoly}. Initially, I generate three empty (black) 1-channel images for each layer. Then I iteratively draw the polygons and then I merge the layers using \texttt{cv2.merge} function. 
 
 \section{Fitness function}
 Fitness function I use is Mean Squared Error. Initially, I used \texttt{mean\_squared\_error} from \textbf{sklearn} but it was very slow. For this reason, I decided to optimize the fitness function. First of all, I started using \textbf{numba} for optimizing my code. I was forced to write my own mse function. Numba allows very nice optimizations for 1-dimensional arrays and for-loops. Overall I improved the performance in 16 times. Note: the smaller the value of fitness function - the better result.
@@ -185,7 +185,7 @@ def mse(im1, im2):
         el2 = im2[0, i]
         mse += (el1 - el2) ** 2
 
-    return mse
+    return mse / im1.shape[1]
 \end{lstlisting}
 
 \section{Mutation}
@@ -206,7 +206,7 @@ Time performance is very poor due to very slow function that generates Voronoi P
 The program does not consume memory. It takes about 1-30 MB to run.
 
 \section{Examples}
-Below you can find some examples. All of them are 180,000 - 200,000 generations. Every picture was obtained in 15-20 minutes (IntelCore i7 7th gen.)
+Below you can find some examples. All of them are 180,000 - 200,000 generations (except for the first one: 500,000). Every picture was obtained in 15-20 minutes (IntelCore i7 7th gen.)
 \begin{figure}[ht]
    	 \centering
      \begin{subfigure}[b]{0.45\textwidth}
@@ -257,13 +257,13 @@ Below you can find some examples. All of them are 180,000 - 200,000 generations.
      \begin{subfigure}[b]{0.45\textwidth}
          \centering
          \includegraphics[width=\textwidth]{latex_src/voronoi27.png}
-         \caption{Apple}
+         \caption{Apple Logo (1977)}
      \end{subfigure}
      \hfill
      \begin{subfigure}[b]{0.45\textwidth}
          \centering
-         \includegraphics[width=\textwidth]{latex_src/voronoi26.png}
-         \caption{The Earth}
+         \includegraphics[width=\textwidth]{latex_src/voronoi28.png}
+         \caption{Innopolis Logo}
      \end{subfigure}
 \end{figure}
 
