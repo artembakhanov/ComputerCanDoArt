@@ -6,7 +6,7 @@ In this assignment, I used Python 3.7 as a programming language. Also OpenCV and
 
 You can also read my [report](report.pdf).
 
-<iframe src='https://gfycat.com/ifr/TangiblePessimisticArrowworm' frameborder='0' scrolling='no' allowfullscreen width='640' height='684'></iframe>
+![](https://thumbs.gfycat.com/TangiblePessimisticArrowworm-size_restricted.gif)
 
 ## Running the code
 
