@@ -35,7 +35,7 @@ class LayerVoronoiImage(Image):
                 if self.ch_l_point is None or self.ch_l_point[0] != i or self.rgb[i] is None:
 
                     # if change is in structure
-                    if self.rgb[i] is None:
+                    if self.rgb[i] is None or make_beautiful:
                         if self.polys[i] is None:
                             vor = Voronoi(layer[0], incremental=False)
                             self.polys[i] = vor
@@ -100,34 +100,51 @@ class LayerVoronoiImage(Image):
         return mutated
 
     def _chance(self, gen):
-        if gen < 50000:
+        if gen < 500_000:
             return 0.5
         else:
-            return 0.5 + (gen - 50000) * 0.5 / 50000
+            return 0.5 + (gen - 500_000) * 0.5 / 500_000
 
     def _mutate(self, mutated, gen):
         changed_layer = rd.randint(0, 3)
         layer = mutated.layers[changed_layer]
         point = rd.randint(0, len(layer[0]))
 
-        if rd.rand() > self._chance(gen):
+        if rd.rand() > 0.5:#self._chance(gen):
             mutated.rgb[changed_layer] = None
             mutated.polys[changed_layer] = None
             xy = rd.randint(0, 2)
-            layer[0][point][xy] = rd.randint(0, self.size[xy])
+            if gen < 50000:
+                layer[0][point][xy] = rd.randint(0, self.size[xy])
+            else:
+                layer[0][point][xy] = layer[0][point][xy] + rd.randn() * 10
         else:
             layer[1][point] = rd.randint(0, 256)
             mutated.ch_l_point = (changed_layer, point)
 
+    def draw_bfl(self):
+        layers = [np.zeros(self.size, dtype=np.uint8) for _ in range(3)]
+        for i, layer in enumerate(self.layers):
+            vor = Voronoi(layer[0], incremental=False)
+            # draw from scratch
+            ver = np.int32(vor.vertices)
+            for j in range(0, len(vor.point_region)):
+                ri = vor.point_region[j]
+                if len(vor.regions[ri]) != 0 and -1 not in vor.regions[ri]:
+                    cv2.fillPoly(layers[i], [ver[vor.regions[ri]].reshape((-1, 1, 2))],
+                                 int(self.layers[i][1][j]), cv2.LINE_AA)
+
+        return cv2.merge(layers)
+
     def save(self, name):
-        cv2.imwrite(name, self.draw(make_beautiful=True))
+        cv2.imwrite(name, self.draw_bfl())
 
 
 class VoronoiLayerImageGenerator(Generator):
     def __init__(self, original_image):
         super().__init__(original_image)
 
-    def generate(self, n=1, pts_numbers=1160):
+    def generate(self, n=1, pts_numbers=35*35):
         ims = []
         for _ in range(n):
             pts = [[[], []] for _ in range(3)]
