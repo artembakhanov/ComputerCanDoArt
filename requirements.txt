@@ -1,4 +1,4 @@
-Pillow==7.1.2
+Pillow==10.0.1
 PyWavelets==1.1.1
 cycler==0.10.0
 decorator==4.4.2
